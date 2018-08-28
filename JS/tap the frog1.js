@@ -1,5 +1,7 @@
 var frog;
- 
+var leave=[];
+var q=0;
+var leaveDistance=window.innerWidth/4;
 
 canvas = document.getElementById("myCanvas");
 canvas.width=window.innerWidth-10;
@@ -8,18 +10,32 @@ context=canvas.getContext("2d");
 
 frog = new component(window.innerWidth/4,window.innerHeight/2,"../images/frog.png",80,80,"image");
 water = new component(0,window.innerHeight/3,"blue",window.innerWidth-10,window.innerHeight-10);
-leave = new component(window.innerWidth/4,window.innerHeight/2+60,"../images/leave.png",100,40,"image");
+
+for(a=0;a<100;a++){
+
+
+leave[a] = new component(leaveDistance,window.innerHeight/2+60,"../images/leave.png",100,40,"image");
+if(Math.round(Math.random())==0){
+leaveDistance+=200;
+}
+else if(Math.round(Math.random())==1){
+     leaveDistance+=100;
+}
+}
 
 
 var startGame={
 
     jumping:false,
     
+    frameNo:0,
+    
+    
      jump:function(){
         console.log("sj")
          window.addEventListener('keydown',function(e){
            startGame.key=e.keyCode;
-           console.log("down")
+           
        })
        window.addEventListener('keyup',function(e){
         startGame.key=false;
@@ -32,7 +48,7 @@ var startGame={
     context.clearRect(0,0,canvas.width,canvas.height);
 }
 }
-var a = (function game(){
+var forJumping = (function game(){
     startGame.jump();
     })();
     
@@ -65,16 +81,21 @@ function component(x,y,color,width,height,type){
             this.gravitySpeed+=this.gravity;
             this.y+=this.gravitySpeed;
             this.gravity+=1;
+            
 
         }
-        this.leaveOnStay=function(){
+        this.collisionDetection=function(){
+
+            this.top=this.x;
+            this.bottom=this.x+this.height;
             
-            var collision = window.innerHeight/2;
+            var collision = leave[0].y-60;
             if(this.y>collision){
                 // console.log("dchu")
                 this.y=collision;
                 startGame.jumping=false;
                 this.gravity=0;
+                this.gravitySpeed=0;
             }
         }
         
@@ -88,16 +109,50 @@ function update(){
    
     startGame.clear();
     water.update();
-    leave.update();
-    frog.newPosition();
-    frog.leaveOnStay();
-    frog.update();
-    
-    
    
-    if(startGame.key == 37 && startGame.jumping==false){
+    frog.newPosition();
+    frog.collisionDetection();
+    // frog.update();
+    
+    startGame.frameNo+=1;
+
+   
+    if(startGame.key == 37 && startGame.jumping==false ){
         frog.gravity-=5;
         startGame.jumping=true;
+        for(var q=0;q<100;q+=1){
+          leave[q].x-=100;
+          
+          
+     }
     }
+    
+     if(startGame.key == 37 && startGame.jumping==false ){
+        frog.gravity-=5;
+        startGame.jumping=true;
+        for(var q=0;q<100;q+=1){
+          leave[q].x-=100;
+          
+          
+     }
+    }
+    if( startGame.key == 39 && startGame.jumping==false){
+     frog.gravity-=5;
+     startGame.jumping=true;
+     for(var q=0;q<100;q+=1){
+          leave[q].x-=200;
+          console.log("s")
+          
+     }
+ }
+    for(var w=0;w<100;w++){
+    leave[w].update();
+//     leave[w].x-=5;
+//     leave[i]+=20;
+    }
+    frog.update();
+
+
 }
+
 
