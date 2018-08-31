@@ -6,4 +6,11 @@ canvas{
    
     border:1px solid black;
     background-color:"blue";
+    position: relative;
+}
+
+scoring{
+    text-align: right;
+    position: absolute;
+
 }
